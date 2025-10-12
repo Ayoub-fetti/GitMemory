@@ -9,14 +9,14 @@ function activate(context) {
 	console.log('Congratulations, your extension "gitmemory" is now active!');
 	
 	// start tracker if available
-	if (typeof tracker.start === 'funcion') {
+	if (typeof tracker.start === 'function') {
 		try {
 			tracker.start();
 		} catch (e) {
 			console.log('tracker.start() failed:', e);
 		}
 	}
-	const disposable = vscode.commands.registerCommand('gitmemory.helloWorld', function () {
+	const disposable = vscode.commands.registerCommand('gitmemory.start', function () {
 
 		vscode.window.showInformationMessage('Hello World from GitMemory!');
 	});

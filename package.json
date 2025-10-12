@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "gitmemory.helloWorld",
-        "title": "Hello World"
+        "command": "gitmemory.start",
+        "title": "Start the Extension"
       }
     ]
   },
