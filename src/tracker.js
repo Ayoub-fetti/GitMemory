@@ -1,7 +1,6 @@
 const vscode = require('vscode');
 const EventEmitter = require('events');
 const notifier = require('./notifier');
-const config = require('./config');
 
 const emitter = new EventEmitter();
 
@@ -12,14 +11,18 @@ const state = {
         linesModified: 0,
         functionsAdded: 0,
     },
-    threshold: 50,
+    thresholds: {
+        lines: 50,
+        functions: 2,
+    },
 };
 
 function start() {
     running = true;
     const config = vscode.workspace.getConfiguration('commitReminder');
-    state.threshold = config.get('linesThreshold', 50);
-    console.log('[tracker] started, threshold=', state.threshold);
+    state.thresholds.lines = config.get('linesThreshold', 50);
+    state.thresholds.functions = config.get('functionsThreshold', 2);
+    console.log('[tracker] started, thresholds=', state.thresholds);
 }
 
 function stop() {
@@ -30,11 +33,8 @@ function stop() {
 function computeLineDiff(oldText = '', newText = '') {
     const oldLines = oldText.split('\n');
     const newLines = newText.split('\n');
-
-    // Compter seulement les lignes réellement ajoutées/supprimées
     const oldCount = oldLines.length;
     const newCount = newLines.length;
-
     return Math.abs(newCount - oldCount);
 }
 
@@ -77,7 +77,6 @@ function onDocumentChange(event) {
         const newText = doc.getText();
 
         if (!state.perFile.has(uri)) {
-            // Premier enregistrement du fichier
             state.perFile.set(uri, newText);
             return;
         }
@@ -88,7 +87,6 @@ function onDocumentChange(event) {
 
         state.perFile.set(uri, newText);
 
-        // Mise à jour des totaux seulement si il y a vraiment des changements
         if (modifiedLines > 0) {
             state.totals.linesModified += modifiedLines;
         }
@@ -97,12 +95,12 @@ function onDocumentChange(event) {
         }
 
         if (
-            state.totals.linesModified >= state.threshold ||
-            state.totals.functionsAdded >= state.threshold
+            state.totals.linesModified >= state.thresholds.lines ||
+            state.totals.functionsAdded >= state.thresholds.functions
         ) {
             try {
                 notifier.notify(
-                    `Commit reminder: ${state.totals.linesModified} lines modified, ${state.totals.functionsAdded} functions added.`
+                    `⚠️ Commit reminder: ${state.totals.linesModified} lines modified, ${state.totals.functionsAdded} functions added.`
                 );
             } catch (e) {
                 console.error('[tracker] notifier failed', e);
@@ -110,7 +108,7 @@ function onDocumentChange(event) {
 
             emitter.emit('threshold', {
                 totals: { ...state.totals },
-                threshold: state.threshold,
+                thresholds: { ...state.thresholds },
             });
 
             state.totals.linesModified = 0;

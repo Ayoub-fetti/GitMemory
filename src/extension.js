@@ -43,7 +43,7 @@ function activate(context) {
 
     // Commande pour démarrer l'extension
     const disposable = vscode.commands.registerCommand('gitmemory.start', function () {
-        vscode.window.showInformationMessage('Hello World from GitMemory!');
+        vscode.window.showInformationMessage('✨ GitMemory: Forget forgetting!');
     });
 
     context.subscriptions.push(disposable);

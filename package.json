@@ -25,14 +25,14 @@
       "type": "object",
       "title": "GitMemory Configuration",
       "properties": {
-        "commitReminder.linesThreshold": {
+        "gitmemory.linesThreshold": {
           "type": "number",
           "default": 50,
           "description": "The number of lines modified before triggering a commit reminder."
         },
-        "commitReminder.functionsThreshold": {
+        "gitmemory.functionsThreshold": {
           "type": "number",
-          "default": 5,
+          "default": 2,
           "description": "The number of functions added before triggering a commit reminder."
         }
       }

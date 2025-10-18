@@ -16,7 +16,7 @@ const state = {
     // thresholds (default values)
     thresholds: {
         lines: 50,
-        functions: 10,
+        functions: 2,
     },
 };
 
@@ -24,9 +24,9 @@ const state = {
  * Lit les paramètres utilisateur et met à jour les seuils.
  */
 function updateThresholds() {
-    const config = vscode.workspace.getConfiguration('commitReminder');
+    const config = vscode.workspace.getConfiguration('gitmemory');
     state.thresholds.lines = config.get('linesThreshold', 50); // Valeur par défaut : 50
-    state.thresholds.functions = config.get('functionsThreshold', 10); // Valeur par défaut : 10
+    state.thresholds.functions = config.get('functionsThreshold', 2); // Valeur par défaut : 2
     console.log('[tracker] Thresholds updated:', state.thresholds);
 }
 
