@@ -2,6 +2,8 @@
   "name": "gitmemory",
   "displayName": "GitMemory",
   "description": "vscode extension for developers ",
+  "publisher": "AyoubFetti",
+  "icon": "icon.png",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.105.0"
@@ -14,6 +16,10 @@
     "onDidOpenTextDocument"
   ],
   "main": "./src/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ayoub-fetti/GitMemory.git"
+  },
   "contributes": {
     "commands": [
       {
