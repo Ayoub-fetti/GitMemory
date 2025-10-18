@@ -1,65 +1,52 @@
-# gitmemory README
+# GitMemory
 
-This is the README for your extension "gitmemory". After writing up a brief description, we recommend including the following sections.
+GitMemory is a Visual Studio Code extension designed to help developers keep track of their code changes and remind them to commit frequently. It monitors the number of lines modified and functions added in your workspace and notifies you when thresholds are reached.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Real-time Change Tracking**: Tracks the number of lines modified and functions added in your workspace.
+- **Customizable Thresholds**: Set thresholds for lines modified and functions added before receiving a commit reminder.
+- **Status Bar Integration**: Displays the current count of modified lines and added functions in the status bar.
+- **Commit Reminder Notifications**: Notifies you when thresholds are reached, with options to make a commit or configure settings.
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![Status Bar Example](images/status-bar-example.png)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- Visual Studio Code version `^1.105.0` or higher.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- **`gitmemory.linesThreshold`**: The number of lines modified before triggering a commit reminder. Default: `50`.
+- **`gitmemory.functionsThreshold`**: The number of functions added before triggering a commit reminder. Default: `2`.
+
+## Commands
+
+- **`GitMemory: Start the Extension`**: Activates the GitMemory extension.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Notifications may not appear if the extension is not properly activated. Ensure the extension is running and the workspace is open.
+- The extension currently tracks changes only in text documents.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+- Initial release of GitMemory.
+- Tracks lines modified and functions added.
+- Displays a status bar item with real-time updates.
+- Sends notifications when thresholds are reached.
 
 ---
 
-## Working with Markdown
+## Contributing
 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+Contributions are welcome! If you encounter any issues or have feature requests, please open an issue or submit a pull request on the [GitHub repository](https://github.com/Ayoub-fetti/GitMemory).
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
 
-## For more information
+---
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**Enjoy using GitMemory!**
