@@ -29,7 +29,7 @@
         },
         "commitReminder.functionsThreshold": {
           "type": "number",
-          "default": 10,
+          "default": 5,
           "description": "The number of functions added before triggering a commit reminder."
         }
       }

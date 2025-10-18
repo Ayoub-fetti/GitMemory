@@ -2,6 +2,13 @@ const vscode = require('vscode');
 const tracker = require('./tracker');
 const notifier = require('./notifier');
 const config = require('./config');
+const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+    };
+};
 
 let statusBarItem; // StatusBarItem global pour afficher le compteur
 
@@ -14,23 +21,23 @@ function activate(context) {
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
 
-    // Mettre à jour le compteur dans la barre de statut à chaque changement de document
-    const changeDisposable = vscode.workspace.onDidChangeTextDocument((event) => {
+    const debouncedOnDocumentChange = debounce((event) => {
         try {
             if (typeof tracker.onDocumentChange === 'function') {
                 tracker.onDocumentChange(event);
 
-                // Récupérer l'état actuel du tracker
                 const state = tracker._getState();
                 const linesModified = state.totals.linesModified;
 
-                // Mettre à jour le texte du StatusBarItem
+                // Update the StatusBarItem text
                 statusBarItem.text = `$(pencil) ${linesModified} lines modified`;
             }
         } catch (err) {
             console.error('Error while handling document change:', err);
         }
-    });
+    }, 200);
+
+    const changeDisposable = vscode.workspace.onDidChangeTextDocument(debouncedOnDocumentChange);
 
     context.subscriptions.push(changeDisposable);
 
