@@ -1,51 +1,48 @@
-
 const vscode = require('vscode');
 const tracker = require('./tracker');
-const notifer = require('./notifier');
-const config = require('./config')
+const notifier = require('./notifier');
+const config = require('./config');
+
+let statusBarItem; // StatusBarItem global pour afficher le compteur
 
 function activate(context) {
+    console.log('Congratulations, your extension "gitmemory" is now active!');
 
-	console.log('Congratulations, your extension "gitmemory" is now active!');
-	
-	// start tracker if available
-	if (typeof tracker.start === 'function') {
-		try {
-			tracker.start();
-		} catch (e) {
-			console.log('tracker.start() failed:', e);
-		}
-	}
-	const disposable = vscode.commands.registerCommand('gitmemory.start', function () {
+    // Créer un StatusBarItem pour afficher les lignes modifiées
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+    statusBarItem.text = `$(pencil) 0 lines modified`;
+    statusBarItem.show();
+    context.subscriptions.push(statusBarItem);
 
-		vscode.window.showInformationMessage('Hello World from GitMemory!');
-	});
-
-	context.subscriptions.push(disposable);
-
-	    // Listen to document changes and forward to tracker (tries several common handler names)
-	    const changeDisposable = vscode.workspace.onDidChangeTextDocument((event) => {
+    // Mettre à jour le compteur dans la barre de statut à chaque changement de document
+    const changeDisposable = vscode.workspace.onDidChangeTextDocument((event) => {
         try {
             if (typeof tracker.onDocumentChange === 'function') {
                 tracker.onDocumentChange(event);
-            } else if (typeof tracker.handleChange === 'function') {
-                tracker.handleChange(event);
-            } else if (typeof tracker.processChange === 'function') {
-                tracker.processChange(event);
-            } else {
-                // optional: notify if tracker has no handler
-                if (typeof notifier.notify === 'function') {
-                    notifier.notify('No tracker handler found for document change.');
-                }
+
+                // Récupérer l'état actuel du tracker
+                const state = tracker._getState();
+                const linesModified = state.totals.linesModified;
+
+                // Mettre à jour le texte du StatusBarItem
+                statusBarItem.text = `$(pencil) ${linesModified} lines modified`;
             }
         } catch (err) {
             console.error('Error while handling document change:', err);
         }
     });
 
-	context.subscriptions.push(changeDisposable);
-		// ensure tracker.stop is called on dispose 
-	    const lifecycleDisposable = {
+    context.subscriptions.push(changeDisposable);
+
+    // Commande pour démarrer l'extension
+    const disposable = vscode.commands.registerCommand('gitmemory.start', function () {
+        vscode.window.showInformationMessage('Hello World from GitMemory!');
+    });
+
+    context.subscriptions.push(disposable);
+
+    // Assurer que tracker.stop est appelé lors de la désactivation
+    const lifecycleDisposable = {
         dispose: () => {
             try {
                 if (typeof tracker.stop === 'function') tracker.stop();
@@ -54,12 +51,20 @@ function activate(context) {
             }
         }
     };
-	context.subscriptions.push(lifecycleDisposable);
+    context.subscriptions.push(lifecycleDisposable);
 
+    // Démarrer le tracker
+    if (typeof tracker.start === 'function') {
+        try {
+            tracker.start();
+        } catch (e) {
+            console.log('tracker.start() failed:', e);
+        }
+    }
 }
 
 function deactivate() {
-	try {
+    try {
         if (typeof tracker.stop === 'function') tracker.stop();
     } catch (err) {
         console.error('Error during deactivate:', err);
@@ -67,6 +72,6 @@ function deactivate() {
 }
 
 module.exports = {
-	activate,
-	deactivate
-}
+    activate,
+    deactivate
+};
