@@ -17,7 +17,23 @@
         "command": "gitmemory.start",
         "title": "Start the Extension"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "GitMemory Configuration",
+      "properties": {
+        "commitReminder.linesThreshold": {
+          "type": "number",
+          "default": 50,
+          "description": "The number of lines modified before triggering a commit reminder."
+        },
+        "commitReminder.functionsThreshold": {
+          "type": "number",
+          "default": 10,
+          "description": "The number of functions added before triggering a commit reminder."
+        }
+      }
+    }
   },
   "scripts": {
     "lint": "eslint .",
